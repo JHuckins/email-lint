@@ -2,7 +2,8 @@ var lint,
 	lints = [],
 	categories = {},
 	_ = require('underscore'),
-	jsdom  = require("jsdom"),
+	fs = require("fs"),
+	JSDOM  = require("jsdom"),
 	cssom = require('cssom');
 	
 module.exports = lint = function(category, id, name, extended, clients, test) {
@@ -15,14 +16,34 @@ module.exports = lint = function(category, id, name, extended, clients, test) {
 lint.clients = [];
 
 lint.run = function(data, clientsArray, ignoredArr, callback) {
-	console.log(__dirname)
-	jsdom.env(data, [__dirname + "/jquery-1.7.1.js"], function (errors, window) {
-		if (errors) { console.log(errors); callback({ran:false, errors:[errors]}) }
-		lint.createJQueryHelpers(window);
-		window.__originalSource = data;
-		evaluate(window, clientsArray, ignoredArr, callback);
-	});
+    console.log(__dirname);
+    fs.readFile(__dirname + "/jquery-1.7.1.js", "utf-8", (err, jquery) => {
+        if (err) {
+            console.error(err);
+            return callback({ ran: false, errors: [err] });
+        }
+
+        const dom = new JSDOM(data, { runScripts: "dangerously", resources: "usable" });
+        const { window } = dom;
+        const { document } = window;
+
+        // Load jQuery into the JSDOM window
+        const script = document.createElement("script");
+        script.textContent = jquery;
+        document.head.appendChild(script);
+
+        // Execute your jQuery-based DOM manipulations here
+        lint.createJQueryHelpers(window);
+
+        // For example, get the modified HTML content
+        const modifiedHTML = dom.serialize();
+        console.log(modifiedHTML);
+
+        // Return the manipulated content
+        callback({ ran: true, errors: null, content: modifiedHTML });
+    });
 };
+
 
 function evaluate(window, clients, ignoredArr, callback) {
 	if (typeof clients == 'function') { callback = clients; clients = null; }
