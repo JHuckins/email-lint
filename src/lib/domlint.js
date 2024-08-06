@@ -14,18 +14,6 @@ module.exports = lint = function(category, id, name, extended, clients, test) {
 
 lint.clients = [];
 
-lint.runOld = function(data, clientsArray, ignoredArr, callback) {
-        console.log(__dirname)
-        jsdom.env(data, [__dirname + "/jquery-1.7.1.js"], function (errors, window) {
-                if (errors) { console.log(errors); callback({ran:false, errors:[errors]}) }
-                lint.createJQueryHelpers(window);
-                window.__originalSource = data;
-                evaluate(window, clientsArray, ignoredArr, callback);
-        });
-};
-
-
-
 lint.run = function(data, clientsArray, ignoredArr, callback) {
     console.log(__dirname);
     fs.readFile(__dirname + "/jquery-1.7.1.js", "utf-8", (err, jquery) => {
