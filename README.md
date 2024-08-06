@@ -1,4 +1,4 @@
-EmailLint
+Email-lint
 =========
 
 This is a fork of the EmailLint project: https://github.com/lukeschafer/EmailLint and is meant to bring the project up to date.
