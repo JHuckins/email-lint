@@ -3,7 +3,7 @@ var lint,
 	categories = {},
 	_ = require('underscore'),
 	fs = require("fs"),
-	JSDOM  = require("jsdom"),
+	{ JSDOM }  = require("jsdom"),
 	cssom = require('cssom');
 	
 module.exports = lint = function(category, id, name, extended, clients, test) {
