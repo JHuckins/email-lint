@@ -1,47 +1,47 @@
 EmailLint
 =========
 
-*NOTE* Hosting of this project has lapsed, as has (obviously) keeping it up to date. I may get around to doing it again but it's super low on my priority list right now.
-
-Validate cross-client compatible emails. Written in node.js by Luke Schafer. See it in action at http://emaillint.com/
+This is a fork of the EmailLint project: https://github.com/lukeschafer/EmailLint and is meant to bring the project up to date.
 
 # Overview
 
-EmailLint is a lint program ( http://en.wikipedia.org/wiki/Lint_(software) ) designed to ensure HTML emails are created using techniques that are available in all major email clients. You can read more at http://emaillint.com/what
-
-This repository is for all the code required to host a replica of the site you see at http://emaillint.com
+EmailLint is a lint program ( http://en.wikipedia.org/wiki/Lint_(software) ) designed to ensure HTML emails are created using techniques that are available in all major email clients. 
 
 # Installation on Linux
 
-Emaillint uses a zero-build-step style of node.js. It is hosted on a $5 VPS and has been running for years with zero intervention, so it should be pretty stable!
+Emaillint uses a zero-build-step style of node.js.
 
-1. Get the source on the server. On emaillint.com this is a git checkout/pull in ~/www/emaillint
-2. If you would like to run on a different port, change the last line in SRC/web/index.js
-3. Install node.js
-4. Run it - /usr/local/bin/node /YOURUSER/www/emaillint/web/index.js
+1. Git clone this repo. 
+2. If you would like to run on a different port, change the last line in src/web/index.js
+3. Install Node.js
+4. Run it via ```nodejs /path/to/cloned/emaillint/repo/src/web/index.js```
 
-## Use Monit
+## Install Monit
 
-I use monit to ensure the app is always running.
+Monit can be used to ensure the app is always running.
 
-1. Install monit - sudo apt-get install monit
+1. Install monit - sudo apt install monit
 2. Edit /etc/monit/monitrc and make sure it has 'set http' on
-3. Create /etc/monit/services/emaillint the stuff in the following code block.
-4. Restart monit - sudo service monit restart
+     Look for the commented out line starting with "set httpd..."
+     Uncomment this line and the line: allow admin:monit
+     Change these credentials as desired.   
+4. Create the /etc/monit/services directory if it doesn't exist.   
+5. Create /etc/monit/services/emaillint and add the following contents:.
 ```
   check host emaillint with address 127.0.0.1
-    start program = "/usr/local/bin/node /[YOURUSER]/www/emaillint/web/index.js"
-    stop program  = "/usr/bin/pkill -f 'node /[YOURUSER]/www/emaillint/web/index.js'"
+    start program = "/usr/local/bin/node /path/to/cloned/emaillint/repo/src/web/index.js"
+    stop program  = "/usr/bin/pkill -f 'node /path/to/cloned/emaillint/repo/src/web/index.js'"
     if failed port [YOURPORT] protocol HTTP
         request /
         with timeout 10 seconds
         then restart
-
 ```
 
-# Contributions
+ [YOURPORT] is the port emaillint is listening on (8020 by default).
 
-This site was created from a real need back in 2012. Since then it has seen very little love. It is untested on newer versions of node.js, and uses old versions of packages.
+5. Restart monit - sudo service monit restart
+   
+# Contributions
 
 You can help by submitting pull requests! Primarily looking at the following things:
 * Updates to bootstrap and other client libs.
