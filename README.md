@@ -37,7 +37,7 @@ Monit can be used to ensure the app is always running.
         then restart
 ```
 
- [YOURPORT] is the port emaillint is listening on (8020 by default).
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[YOURPORT] is the port emaillint is listening on (8020 by default).
 
 5. Restart monit - sudo service monit restart
    
