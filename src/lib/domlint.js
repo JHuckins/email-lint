@@ -1,16 +1,17 @@
+const _ = require('underscore');
+const { JSDOM } = require('jsdom');
+const cssom = require('cssom');
+
 var lint,
-        lints = [],
-        categories = {},
-        _ = require('underscore'),
-        { JSDOM } = require("jsdom"),
-        cssom = require('cssom');
+    lints = [],
+    categories = {};
 
 module.exports = lint = function(category, id, name, extended, clients, test) {
         if (typeof clients == 'function') { test = clients; clients = null; }
         var item = {category: category, id:id, name:name, extended: extended, clients: clients, test: test};
         lints.push(item);
         return item;
-}
+};
 
 lint.clients = [];
 
@@ -42,7 +43,6 @@ lint.run = function(data, clientsArray, ignoredArr, callback) {
         callback({ ran: true, errors: null, content: modifiedHTML });
     });
 };
-
 
 function evaluate(window, clients, ignoredArr, callback) {
         if (typeof clients == 'function') { callback = clients; clients = null; }
